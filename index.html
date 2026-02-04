@@ -368,6 +368,7 @@
                 details: 'Multiple files being encrypted on FILESERVER-01. Detected ransomware signature matches BlackCat variant. 147 files encrypted in last 2 minutes.',
                 source: '192.168.1.156',
                 target: 'FILESERVER-01',
+                iocs: 'SHA256: a3f5e8b2c9d1f4a6b8c2e5d7f9a1b3c5e7d9f1a3b5c7e9d1f3a5b7c9e1d3f5a7, File: encrypt.exe, Domain: blackcat-ransomware.tor',
                 time: 'Just now',
                 isNew: true
             },
@@ -378,6 +379,7 @@
                 details: 'Detected 2.3 GB data transfer to unknown external IP. Pattern matches data exfiltration behavior. No legitimate business justification found.',
                 source: 'WORKSTATION-042',
                 target: '203.0.113.87 (Unknown)',
+                iocs: 'IP: 203.0.113.87, Port: 443, Protocol: HTTPS, Data Size: 2.3 GB',
                 time: '2 minutes ago',
                 isNew: true
             },
@@ -388,6 +390,7 @@
                 details: 'Unpatched vulnerability exploitation attempt detected. Attack vector matches CVE-2024-XXXXX. Immediate patching required.',
                 source: '185.220.101.42 (Germany)',
                 target: 'Web Server Cluster',
+                iocs: 'CVE: CVE-2024-XXXXX, IP: 185.220.101.42, Payload Hash: 7f8e9a2b4c6d1e3f5a7b9c2d4e6f8a1b3c5d7e9f',
                 time: '3 minutes ago',
                 isNew: true
             },
@@ -398,6 +401,7 @@
                 details: 'Brute force attack detected. 847 failed login attempts from same IP in last 5 minutes targeting admin accounts.',
                 source: '45.142.212.61 (Russia)',
                 target: 'Domain Controller',
+                iocs: 'IP: 45.142.212.61, Attempts: 847, Target Accounts: admin, administrator, root',
                 time: '5 minutes ago',
                 isNew: false
             },
@@ -408,6 +412,7 @@
                 details: 'Encoded PowerShell command executed with obfuscation. Command attempts to disable Windows Defender and download additional payloads.',
                 source: 'LAPTOP-HR-009',
                 target: 'Local System',
+                iocs: 'Command Hash: 9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b, URL: http://malicious-domain.com/payload.exe',
                 time: '8 minutes ago',
                 isNew: false
             },
@@ -418,6 +423,7 @@
                 details: 'Systematic port scanning detected from internal network. Scanning 1000+ ports on production servers.',
                 source: '10.0.5.234',
                 target: 'Production Network',
+                iocs: 'IP: 10.0.5.234, Ports Scanned: 1000+, Duration: 15 minutes, Protocol: TCP',
                 time: '12 minutes ago',
                 isNew: false
             }
@@ -458,7 +464,7 @@
                         </div>
                         <div class="alert-meta-item">
                             <span class="alert-meta-label">IOCs:</span>
-                            <span class="alert-meta-value">Alert ID: #${String(alert.id).padStart(4, '0')}</span>
+                            <span class="alert-meta-value">${alert.iocs || 'N/A'}</span>
                         </div>
                     </div>
                 </div>
@@ -472,9 +478,27 @@
         let alertCounter = 7;
         setInterval(() => {
             const newAlerts = [
-                { title: '🔴 Advanced Persistent Threat Detected', severity: 'critical', source: '192.168.1.200', target: 'Critical Infrastructure' },
-                { title: '⚠️ Privilege Escalation Attempt', severity: 'high', source: 'WORKSTATION-087', target: 'Domain Admin' },
-                { title: '⚡ Suspicious Network Traffic', severity: 'medium', source: '10.0.8.142', target: 'External IP' }
+                { 
+                    title: '🔴 Advanced Persistent Threat Detected', 
+                    severity: 'critical', 
+                    source: '192.168.1.200', 
+                    target: 'Critical Infrastructure',
+                    iocs: 'IP: 192.168.1.200, C2 Domain: apt-c2.example.com, Persistence: Registry Key HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+                },
+                { 
+                    title: '⚠️ Privilege Escalation Attempt', 
+                    severity: 'high', 
+                    source: 'WORKSTATION-087', 
+                    target: 'Domain Admin',
+                    iocs: 'Process: cmd.exe, Parent PID: 1234, Attempted Access: Domain Admin Group, Method: Token Manipulation'
+                },
+                { 
+                    title: '⚡ Suspicious Network Traffic', 
+                    severity: 'medium', 
+                    source: '10.0.8.142', 
+                    target: 'External IP',
+                    iocs: 'IP: 10.0.8.142, Destination: 198.51.100.42, Port: 4444, Protocol: TCP, Data Transfer: 15 MB'
+                }
             ];
             
             const randomAlert = newAlerts[Math.floor(Math.random() * newAlerts.length)];
