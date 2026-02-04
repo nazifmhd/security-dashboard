@@ -19,7 +19,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #6B30FF 0%, #2A2092 100%);
+            background: linear-gradient(135deg, #5BA3F6 0%, #42A5F5 50%, #2196F3 100%);
             padding: 40px;
             border-radius: 16px;
             margin-bottom: 40px;
@@ -34,27 +34,27 @@
             right: -10%;
             width: 600px;
             height: 600px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><path d="M200,50 Q250,100 200,150 T200,250 T200,350" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/><path d="M200,60 Q250,110 200,160 T200,260 T200,360" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/><path d="M200,70 Q250,120 200,170 T200,270 T200,370" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/></svg>') no-repeat;
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><path d="M200,50 Q250,100 200,150 T200,250 T200,350" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M200,60 Q250,110 200,160 T200,260 T200,360" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/><path d="M200,70 Q250,120 200,170 T200,270 T200,370" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/></svg>') no-repeat;
+            opacity: 0.4;
         }
         
         .logo-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             position: relative;
             z-index: 1;
         }
         
         .logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+            width: 120px;
+            height: auto;
+            max-height: 56px;
+            border-radius: 10px;
             object-fit: contain;
-            background: rgba(255,255,255,0.1);
-            padding: 5px;
-            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
+            padding: 8px 12px;
+            border: 2px solid rgba(255,255,255,0.35);
         }
         
         .logo img {
@@ -73,7 +73,7 @@
         }
         
         .header p {
-            color: rgba(255,255,255,0.95);
+            color: rgba(255,255,255,0.98);
             font-size: 18px;
             line-height: 28px;
             position: relative;
@@ -322,18 +322,10 @@
 <body>
     <div class="header">
         <div class="logo-header">
-            <img src="https://implementai.io/wp-content/themes/implement-ai/images/logo.png?v1" alt="Implement AI Logo" class="logo">
-            <span class="brand-name">Implement AI</span>
+            <img src="https://implementai.io/wp-content/themes/implement-ai/images/logo.png?v1" alt="Implement AI" class="logo">
         </div>
-        <div class="header-title-section">
-            <div class="shield-icon">🛡️</div>
-            <h1>Security Operations Center</h1>
-        </div>
-        <div class="header-tagline">
-            <span>Real-time threat monitoring and incident response</span>
-            <span class="tagline-separator"></span>
-            <span>Powered by SENTINEL AI</span>
-        </div>
+        <h1>🛡️ Security Operations Center</h1>
+        <p>Real-time threat monitoring and incident response | Powered by SENTINEL AI</p>
     </div>
     
     <div class="stats">
