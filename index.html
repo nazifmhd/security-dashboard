@@ -253,40 +253,32 @@
         .alert-details {
             font-size: 18px;
             line-height: 28px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #1E1E1E;
-            display: block;
-            visibility: visible;
         }
         
         .alert-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             font-size: 16px;
-            margin-top: 10px;
-            visibility: visible;
         }
         
         .alert-meta-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            visibility: visible;
+            gap: 10px;
         }
         
         .alert-meta-label {
             font-weight: 700;
             color: #1E1E1E;
             min-width: 100px;
-            display: inline-block;
         }
         
         .alert-meta-value {
             color: #1E1E1E;
-            opacity: 0.9;
-            display: inline-block;
-            flex: 1;
+            opacity: 0.8;
         }
         
         .new-badge {
@@ -376,12 +368,6 @@
                 details: 'Multiple files being encrypted on FILESERVER-01. Detected ransomware signature matches BlackCat variant. 147 files encrypted in last 2 minutes.',
                 source: '192.168.1.156',
                 target: 'FILESERVER-01',
-                user: 'SYSTEM\\svc_backup',
-                process: 'encrypt.exe',
-                protocol: 'SMB',
-                port: '445',
-                affectedResources: '147 files',
-                status: 'Active',
                 time: 'Just now',
                 isNew: true
             },
@@ -392,12 +378,6 @@
                 details: 'Detected 2.3 GB data transfer to unknown external IP. Pattern matches data exfiltration behavior. No legitimate business justification found.',
                 source: 'WORKSTATION-042',
                 target: '203.0.113.87 (Unknown)',
-                user: 'DOMAIN\\j.smith',
-                process: 'powershell.exe',
-                protocol: 'HTTPS',
-                port: '443',
-                affectedResources: '2.3 GB',
-                status: 'In Progress',
                 time: '2 minutes ago',
                 isNew: true
             },
@@ -408,12 +388,6 @@
                 details: 'Unpatched vulnerability exploitation attempt detected. Attack vector matches CVE-2024-XXXXX. Immediate patching required.',
                 source: '185.220.101.42 (Germany)',
                 target: 'Web Server Cluster',
-                user: 'N/A',
-                process: 'httpd',
-                protocol: 'HTTP',
-                port: '80',
-                affectedResources: '3 servers',
-                status: 'Blocked',
                 time: '3 minutes ago',
                 isNew: true
             },
@@ -424,12 +398,6 @@
                 details: 'Brute force attack detected. 847 failed login attempts from same IP in last 5 minutes targeting admin accounts.',
                 source: '45.142.212.61 (Russia)',
                 target: 'Domain Controller',
-                user: 'admin, administrator, root',
-                process: 'winlogon.exe',
-                protocol: 'RDP',
-                port: '3389',
-                affectedResources: '847 attempts',
-                status: 'Blocked',
                 time: '5 minutes ago',
                 isNew: false
             },
@@ -440,12 +408,6 @@
                 details: 'Encoded PowerShell command executed with obfuscation. Command attempts to disable Windows Defender and download additional payloads.',
                 source: 'LAPTOP-HR-009',
                 target: 'Local System',
-                user: 'DOMAIN\\m.jones',
-                process: 'powershell.exe',
-                protocol: 'N/A',
-                port: 'N/A',
-                affectedResources: 'Local System',
-                status: 'Quarantined',
                 time: '8 minutes ago',
                 isNew: false
             },
@@ -456,12 +418,6 @@
                 details: 'Systematic port scanning detected from internal network. Scanning 1000+ ports on production servers.',
                 source: '10.0.5.234',
                 target: 'Production Network',
-                user: 'DOMAIN\\dev_user',
-                process: 'nmap',
-                protocol: 'TCP',
-                port: 'Multiple',
-                affectedResources: '1000+ ports',
-                status: 'Monitored',
                 time: '12 minutes ago',
                 isNew: false
             }
@@ -480,47 +436,33 @@
 
         function renderAlerts() {
             const container = document.getElementById('alerts');
-            if (!container) return;
-            
-            container.innerHTML = alerts.map(alert => {
-                // Ensure all required fields exist
-                const severity = alert.severity || 'medium';
-                const title = alert.title || 'Unknown Alert';
-                const details = alert.details || 'No details available.';
-                const source = alert.source || 'Unknown';
-                const target = alert.target || 'Unknown';
-                const time = alert.time || 'Unknown time';
-                const alertId = alert.id || 0;
-                const isNew = alert.isNew || false;
-                
-                return `
-                <div class="alert-item ${severity}">
+            container.innerHTML = alerts.map(alert => `
+                <div class="alert-item ${alert.severity}">
                     <div class="alert-header">
                         <div class="alert-title">
-                            <span class="severity-badge ${severity}">${severity.toUpperCase()}</span>
-                            <strong>${title}</strong>
-                            ${isNew ? '<span class="new-badge">NEW</span>' : ''}
+                            <span class="severity-badge ${alert.severity}">${alert.severity}</span>
+                            <strong>${alert.title}</strong>
+                            ${alert.isNew ? '<span class="new-badge">NEW</span>' : ''}
                         </div>
-                        <span class="alert-time">${time}</span>
+                        <span class="alert-time">${alert.time}</span>
                     </div>
-                    <div class="alert-details">${details}</div>
+                    <div class="alert-details">${alert.details}</div>
                     <div class="alert-meta">
                         <div class="alert-meta-item">
                             <span class="alert-meta-label">SOURCE:</span>
-                            <span class="alert-meta-value">${source}</span>
+                            <span class="alert-meta-value">${alert.source}</span>
                         </div>
                         <div class="alert-meta-item">
                             <span class="alert-meta-label">TARGET:</span>
-                            <span class="alert-meta-value">${target}</span>
+                            <span class="alert-meta-value">${alert.target}</span>
                         </div>
                         <div class="alert-meta-item">
                             <span class="alert-meta-label">IOCs:</span>
-                            <span class="alert-meta-value">Alert ID: #${String(alertId).padStart(4, '0')}</span>
+                            <span class="alert-meta-value">Alert ID: #${String(alert.id).padStart(4, '0')}</span>
                         </div>
                     </div>
                 </div>
-                `;
-            }).join('');
+            `).join('');
         }
 
         updateStats();
@@ -530,42 +472,9 @@
         let alertCounter = 7;
         setInterval(() => {
             const newAlerts = [
-                { 
-                    title: '🔴 Advanced Persistent Threat Detected', 
-                    severity: 'critical', 
-                    source: '192.168.1.200', 
-                    target: 'Critical Infrastructure',
-                    user: 'SYSTEM\\svc_network',
-                    process: 'svchost.exe',
-                    protocol: 'TCP',
-                    port: '443',
-                    affectedResources: '5 systems',
-                    status: 'Investigating'
-                },
-                { 
-                    title: '⚠️ Privilege Escalation Attempt', 
-                    severity: 'high', 
-                    source: 'WORKSTATION-087', 
-                    target: 'Domain Admin',
-                    user: 'DOMAIN\\temp_user',
-                    process: 'cmd.exe',
-                    protocol: 'LDAP',
-                    port: '389',
-                    affectedResources: 'Domain Controller',
-                    status: 'Blocked'
-                },
-                { 
-                    title: '⚡ Suspicious Network Traffic', 
-                    severity: 'medium', 
-                    source: '10.0.8.142', 
-                    target: 'External IP',
-                    user: 'DOMAIN\\user_142',
-                    process: 'chrome.exe',
-                    protocol: 'HTTPS',
-                    port: '443',
-                    affectedResources: 'Multiple connections',
-                    status: 'Monitored'
-                }
+                { title: '🔴 Advanced Persistent Threat Detected', severity: 'critical', source: '192.168.1.200', target: 'Critical Infrastructure' },
+                { title: '⚠️ Privilege Escalation Attempt', severity: 'high', source: 'WORKSTATION-087', target: 'Domain Admin' },
+                { title: '⚡ Suspicious Network Traffic', severity: 'medium', source: '10.0.8.142', target: 'External IP' }
             ];
             
             const randomAlert = newAlerts[Math.floor(Math.random() * newAlerts.length)];
