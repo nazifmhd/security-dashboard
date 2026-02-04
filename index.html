@@ -331,19 +331,19 @@
     <div class="stats">
         <div class="stat-card critical">
             <h3>Critical Alerts</h3>
-            <div class="number">8</div>
+            <div class="number" id="stat-critical">0</div>
         </div>
         <div class="stat-card high">
             <h3>High Severity</h3>
-            <div class="number">24</div>
+            <div class="number" id="stat-high">0</div>
         </div>
         <div class="stat-card medium">
             <h3>Medium Severity</h3>
-            <div class="number">47</div>
+            <div class="number" id="stat-medium">0</div>
         </div>
         <div class="stat-card low">
             <h3>Active Threats</h3>
-            <div class="number">79</div>
+            <div class="number" id="stat-total">0</div>
         </div>
     </div>
     
@@ -423,6 +423,17 @@
             }
         ];
 
+        function updateStats() {
+            const critical = alerts.filter(a => a.severity === 'critical').length;
+            const high = alerts.filter(a => a.severity === 'high').length;
+            const medium = alerts.filter(a => a.severity === 'medium').length;
+            const total = alerts.length;
+            document.getElementById('stat-critical').textContent = critical;
+            document.getElementById('stat-high').textContent = high;
+            document.getElementById('stat-medium').textContent = medium;
+            document.getElementById('stat-total').textContent = total;
+        }
+
         function renderAlerts() {
             const container = document.getElementById('alerts');
             container.innerHTML = alerts.map(alert => `
@@ -454,6 +465,7 @@
             `).join('');
         }
 
+        updateStats();
         renderAlerts();
         
         // Simulate new alert every 30 seconds
@@ -480,6 +492,7 @@
                 if (index > 0) alert.isNew = false;
             });
             
+            updateStats();
             renderAlerts();
         }, 30000);
     </script>
