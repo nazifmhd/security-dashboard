@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Operations Center - SENTINEL Demo</title>
+    <title>Security Operations Center - Implement AI</title>
     <style>
         * {
             margin: 0;
@@ -12,63 +12,121 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0e27;
-            color: #fff;
-            padding: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F8F2ED;
+            color: #1E1E1E;
+            padding: 40px 30px;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #6B30FF 0%, #2A2092 100%);
+            padding: 40px;
+            border-radius: 16px;
             margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><path d="M200,50 Q250,100 200,150 T200,250 T200,350" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/><path d="M200,60 Q250,110 200,160 T200,260 T200,360" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/><path d="M200,70 Q250,120 200,170 T200,270 T200,370" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/></svg>') no-repeat;
+            opacity: 0.3;
+        }
+        
+        .logo-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .header h1 {
-            font-size: 32px;
+            font-size: 40px;
+            color: white;
+            font-weight: 700;
             margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
         }
         
         .header p {
-            opacity: 0.95;
+            color: rgba(255,255,255,0.95);
             font-size: 18px;
+            line-height: 28px;
+            position: relative;
+            z-index: 1;
         }
         
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             margin-bottom: 40px;
         }
         
         .stat-card {
-            background: #1a1f3a;
+            background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 12px;
             border-left: 5px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .stat-card.critical { border-left-color: #ff3333; }
-        .stat-card.high { border-left-color: #ff8800; }
-        .stat-card.medium { border-left-color: #ffcc00; }
-        .stat-card.low { border-left-color: #00ff88; }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card.critical { border-left-color: #FF6629; }
+        .stat-card.high { border-left-color: #FFCD18; }
+        .stat-card.medium { border-left-color: #6B30FF; }
+        .stat-card.low { border-left-color: #0DEABA; }
         
         .stat-card h3 {
-            font-size: 18px;
-            opacity: 0.85;
+            font-size: 16px;
+            color: #1E1E1E;
+            opacity: 0.7;
             margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .stat-card .number {
-            font-size: 42px;
-            font-weight: bold;
+            font-size: 48px;
+            font-weight: 700;
+            color: #1E1E1E;
         }
         
         .alerts-container {
-            background: #1a1f3a;
-            border-radius: 10px;
-            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .alerts-header {
@@ -77,40 +135,50 @@
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #3d4558;
+            border-bottom: 2px solid #F8F2ED;
         }
         
         .alerts-header h2 {
-            font-size: 24px;
+            font-size: 32px;
+            line-height: 40px;
+            color: #1E1E1E;
+            font-weight: 700;
         }
         
         .live-indicator {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 18px;
+            font-size: 16px;
+            color: #1E1E1E;
+            font-weight: 600;
         }
         
         .live-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
+            width: 12px;
+            height: 12px;
+            background: #0DEABA;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
         }
         
         .alert-item {
-            background: #0f1423;
+            background: #F8F2ED;
             padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
+            margin-bottom: 20px;
+            border-radius: 12px;
             border-left: 5px solid;
             animation: slideIn 0.5s ease;
+            transition: transform 0.2s;
+        }
+        
+        .alert-item:hover {
+            transform: translateX(4px);
         }
         
         @keyframes slideIn {
@@ -125,72 +193,75 @@
         }
         
         .alert-item.critical { 
-            border-left-color: #ff3333;
-            background: linear-gradient(90deg, rgba(255, 51, 51, 0.2) 0%, #0f1423 100%);
+            border-left-color: #FF6629;
+            background: linear-gradient(90deg, rgba(255, 102, 41, 0.08) 0%, #F8F2ED 100%);
         }
         .alert-item.high { 
-            border-left-color: #ff8800;
-            background: linear-gradient(90deg, rgba(255, 136, 0, 0.2) 0%, #0f1423 100%);
+            border-left-color: #FFCD18;
+            background: linear-gradient(90deg, rgba(255, 205, 24, 0.08) 0%, #F8F2ED 100%);
         }
         .alert-item.medium { 
-            border-left-color: #ffcc00;
-            background: linear-gradient(90deg, rgba(255, 204, 0, 0.2) 0%, #0f1423 100%);
+            border-left-color: #6B30FF;
+            background: linear-gradient(90deg, rgba(107, 48, 255, 0.08) 0%, #F8F2ED 100%);
         }
         
         .alert-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .alert-title {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap;
         }
         
         .severity-badge {
             padding: 6px 16px;
             border-radius: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .severity-badge.critical {
-            background: #ff3333;
+            background: #FF6629;
             color: white;
         }
         
         .severity-badge.high {
-            background: #ff8800;
-            color: white;
+            background: #FFCD18;
+            color: #1E1E1E;
         }
         
         .severity-badge.medium {
-            background: #ffcc00;
-            color: #000;
+            background: #6B30FF;
+            color: white;
         }
         
         .alert-time {
-            font-size: 18px;
-            opacity: 0.8;
+            font-size: 14px;
+            color: #1E1E1E;
+            opacity: 0.6;
             font-weight: 500;
         }
         
         .alert-details {
-            font-size: 20px;
-            line-height: 1.8;
-            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 28px;
+            margin-bottom: 15px;
+            color: #1E1E1E;
         }
         
         .alert-meta {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            font-size: 20px;
-            opacity: 0.95;
+            gap: 10px;
+            font-size: 16px;
         }
         
         .alert-meta-item {
@@ -200,56 +271,79 @@
         }
         
         .alert-meta-label {
-            font-weight: bold;
-            color: #ffffff;
+            font-weight: 700;
+            color: #1E1E1E;
             min-width: 100px;
         }
         
         .alert-meta-value {
-            color: #e0e0e0;
+            color: #1E1E1E;
+            opacity: 0.8;
         }
         
         .new-badge {
-            background: #ff3333;
+            background: #FF6629;
             color: white;
             padding: 4px 12px;
             border-radius: 6px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 700;
             animation: blink 1s infinite;
         }
         
         .alert-title strong {
-            font-size: 22px;
+            font-size: 20px;
+            color: #1E1E1E;
+            font-weight: 700;
         }
         
         @keyframes blink {
             0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.5; }
+            25%, 75% { opacity: 0.6; }
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .alerts-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
+        <div class="logo-header">
+            <img src="https://implementai.io/wp-content/themes/implement-ai/images/logo.png?v1" alt="Implement AI Logo" class="logo">
+            <span style="color: white; font-size: 28px; font-weight: 600;">Implement AI</span>
+        </div>
         <h1>🛡️ Security Operations Center</h1>
         <p>Real-time threat monitoring and incident response | Powered by SENTINEL AI</p>
     </div>
     
     <div class="stats">
         <div class="stat-card critical">
-            <h3>CRITICAL ALERTS</h3>
+            <h3>Critical Alerts</h3>
             <div class="number">8</div>
         </div>
         <div class="stat-card high">
-            <h3>HIGH SEVERITY</h3>
+            <h3>High Severity</h3>
             <div class="number">24</div>
         </div>
         <div class="stat-card medium">
-            <h3>MEDIUM SEVERITY</h3>
+            <h3>Medium Severity</h3>
             <div class="number">47</div>
         </div>
         <div class="stat-card low">
-            <h3>ACTIVE THREATS</h3>
+            <h3>Active Threats</h3>
             <div class="number">79</div>
         </div>
     </div>
@@ -300,56 +394,6 @@
             },
             {
                 id: 4,
-                severity: 'critical',
-                title: '🔴 Active Command & Control Communication',
-                details: 'Malware beacon detected establishing C2 channel to known threat actor infrastructure. Multiple infected endpoints identified.',
-                source: '10.0.12.89',
-                target: '185.220.100.0/24 (C2 Server)',
-                time: '4 minutes ago',
-                isNew: false
-            },
-            {
-                id: 5,
-                severity: 'critical',
-                title: '🔴 Database Credential Dump Detected',
-                details: 'Unauthorized access to credential database detected. 12,847 user credentials potentially compromised. Immediate password reset required.',
-                source: 'WORKSTATION-DEV-15',
-                target: 'SQL Database Server',
-                time: '6 minutes ago',
-                isNew: false
-            },
-            {
-                id: 6,
-                severity: 'critical',
-                title: '🔴 Lateral Movement - Domain Admin Compromise',
-                details: 'Unauthorized privilege escalation to domain administrator detected. Attacker using stolen credentials to access critical systems.',
-                source: '192.168.10.45',
-                target: 'Domain Controller (Primary)',
-                time: '7 minutes ago',
-                isNew: false
-            },
-            {
-                id: 7,
-                severity: 'critical',
-                title: '🔴 Cryptocurrency Mining Botnet Activity',
-                details: 'Cryptocurrency mining malware detected on 23 endpoints. CPU usage at 95%+ on affected systems. Network performance degraded.',
-                source: 'Multiple Workstations',
-                target: 'Mining Pool: stratum+tcp://pool.example.com',
-                time: '9 minutes ago',
-                isNew: false
-            },
-            {
-                id: 8,
-                severity: 'critical',
-                title: '🔴 Supply Chain Attack - Compromised Software Update',
-                details: 'Malicious software update detected from vendor update server. Update package contains backdoor payload. 156 systems affected.',
-                source: 'Update Server: updates.vendor.com',
-                target: 'Enterprise Workstations',
-                time: '11 minutes ago',
-                isNew: false
-            },
-            {
-                id: 9,
                 severity: 'high',
                 title: '⚠️ Multiple Failed Login Attempts',
                 details: 'Brute force attack detected. 847 failed login attempts from same IP in last 5 minutes targeting admin accounts.',
@@ -359,7 +403,7 @@
                 isNew: false
             },
             {
-                id: 10,
+                id: 5,
                 severity: 'high',
                 title: '⚠️ Suspicious PowerShell Execution',
                 details: 'Encoded PowerShell command executed with obfuscation. Command attempts to disable Windows Defender and download additional payloads.',
@@ -369,373 +413,13 @@
                 isNew: false
             },
             {
-                id: 11,
-                severity: 'high',
-                title: '⚠️ Phishing Email Campaign Detected',
-                details: 'Mass phishing email campaign targeting employees. 342 emails sent with malicious attachments. 8 users clicked suspicious links.',
-                source: 'External Email Server',
-                target: 'Corporate Email System',
-                time: '10 minutes ago',
-                isNew: false
-            },
-            {
-                id: 12,
-                severity: 'high',
-                title: '⚠️ Unauthorized Access to Cloud Storage',
-                details: 'Suspicious API calls detected accessing cloud storage buckets. Unusual data access patterns from unrecognized IP address.',
-                source: '203.0.113.156 (Unknown)',
-                target: 'AWS S3 Bucket: company-data',
-                time: '13 minutes ago',
-                isNew: false
-            },
-            {
-                id: 13,
-                severity: 'high',
-                title: '⚠️ Privilege Escalation Attempt',
-                details: 'Multiple attempts to escalate user privileges detected. Attacker attempting to gain administrative access to production systems.',
-                source: 'WORKSTATION-087',
-                target: 'Production Server Farm',
-                time: '15 minutes ago',
-                isNew: false
-            },
-            {
-                id: 14,
-                severity: 'high',
-                title: '⚠️ SQL Injection Attack on Web Application',
-                details: 'SQL injection payload detected in web application requests. Attempting to extract database schema and sensitive information.',
-                source: '157.245.130.45',
-                target: 'Web Application Database',
-                time: '18 minutes ago',
-                isNew: false
-            },
-            {
-                id: 15,
-                severity: 'high',
-                title: '⚠️ Suspicious Registry Modifications',
-                details: 'Unauthorized registry modifications detected on multiple endpoints. Changes indicate persistence mechanism installation.',
-                source: 'WORKSTATION-FIN-23',
-                target: 'Windows Registry (HKLM)',
-                time: '20 minutes ago',
-                isNew: false
-            },
-            {
-                id: 16,
-                severity: 'high',
-                title: '⚠️ Network Segmentation Bypass Attempt',
-                details: 'Attempted lateral movement across network segments detected. Firewall rules may be misconfigured or compromised.',
-                source: '10.0.8.142',
-                target: 'DMZ Network Segment',
-                time: '22 minutes ago',
-                isNew: false
-            },
-            {
-                id: 17,
-                severity: 'high',
-                title: '⚠️ Suspicious DLL Injection Detected',
-                details: 'Malicious DLL injection into legitimate process detected. Process hollowing technique used to evade detection.',
-                source: 'LAPTOP-IT-056',
-                target: 'svchost.exe (Process ID: 2847)',
-                time: '25 minutes ago',
-                isNew: false
-            },
-            {
-                id: 18,
-                severity: 'high',
-                title: '⚠️ Unauthorized VPN Connection',
-                details: 'VPN connection established from unrecognized device and location. User credentials may be compromised.',
-                source: 'VPN Gateway',
-                target: 'Internal Network',
-                time: '28 minutes ago',
-                isNew: false
-            },
-            {
-                id: 19,
-                severity: 'high',
-                title: '⚠️ Suspicious File Download Pattern',
-                details: 'Unusual file download pattern detected. Multiple executable files downloaded from untrusted sources in short timeframe.',
-                source: 'WORKSTATION-SALES-12',
-                target: 'External Download Servers',
-                time: '30 minutes ago',
-                isNew: false
-            },
-            {
-                id: 20,
-                severity: 'high',
-                title: '⚠️ Active Directory Enumeration',
-                details: 'Automated AD enumeration tools detected. Attacker mapping network structure and user accounts for reconnaissance.',
-                source: '192.168.5.78',
-                target: 'Active Directory Domain',
-                time: '33 minutes ago',
-                isNew: false
-            },
-            {
-                id: 21,
-                severity: 'high',
-                title: '⚠️ Suspicious Network Protocol Usage',
-                details: 'Unusual network protocol usage detected. Non-standard ports and protocols being used for communication.',
-                source: '10.0.15.203',
-                target: 'External IP: 198.51.100.42',
-                time: '35 minutes ago',
-                isNew: false
-            },
-            {
-                id: 22,
-                severity: 'high',
-                title: '⚠️ Memory Scraping Attack Detected',
-                details: 'Memory scraping tool detected attempting to extract credentials from running processes. Mimikatz-like behavior identified.',
-                source: 'SERVER-DB-03',
-                target: 'lsass.exe Process Memory',
-                time: '38 minutes ago',
-                isNew: false
-            },
-            {
-                id: 23,
-                severity: 'high',
-                title: '⚠️ Suspicious Scheduled Task Creation',
-                details: 'Unauthorized scheduled task created on multiple systems. Task configured to execute malicious payload at system startup.',
-                source: 'WORKSTATION-MKT-08',
-                target: 'Windows Task Scheduler',
-                time: '40 minutes ago',
-                isNew: false
-            },
-            {
-                id: 24,
-                severity: 'high',
-                title: '⚠️ Unauthorized API Key Usage',
-                details: 'Suspicious API key usage detected from external IP. Unauthorized access to cloud services and data repositories.',
-                source: '203.0.113.89',
-                target: 'Cloud API Endpoints',
-                time: '42 minutes ago',
-                isNew: false
-            },
-            {
-                id: 25,
+                id: 6,
                 severity: 'medium',
                 title: '⚡ Port Scan Detected',
                 details: 'Systematic port scanning detected from internal network. Scanning 1000+ ports on production servers.',
                 source: '10.0.5.234',
                 target: 'Production Network',
                 time: '12 minutes ago',
-                isNew: false
-            },
-            {
-                id: 26,
-                severity: 'medium',
-                title: '⚡ Suspicious Network Traffic',
-                details: 'Unusual network traffic patterns detected. High volume of connections to external IP addresses during off-hours.',
-                source: '10.0.8.142',
-                target: 'External IP Range',
-                time: '14 minutes ago',
-                isNew: false
-            },
-            {
-                id: 27,
-                severity: 'medium',
-                title: '⚡ Unusual User Behavior Pattern',
-                details: 'User account showing unusual access patterns. Logging in from multiple geographic locations simultaneously.',
-                source: 'User: jsmith@company.com',
-                target: 'Corporate Applications',
-                time: '16 minutes ago',
-                isNew: false
-            },
-            {
-                id: 28,
-                severity: 'medium',
-                title: '⚡ Suspicious Browser Extension',
-                details: 'Malicious browser extension detected on multiple workstations. Extension attempting to capture form data and credentials.',
-                source: 'WORKSTATION-OPS-19',
-                target: 'Chrome Browser Extensions',
-                time: '19 minutes ago',
-                isNew: false
-            },
-            {
-                id: 29,
-                severity: 'medium',
-                title: '⚡ Unauthorized Software Installation',
-                details: 'Unauthorized software installation detected on production systems. Software not approved in corporate policy.',
-                source: 'SERVER-WEB-02',
-                target: 'Production Environment',
-                time: '21 minutes ago',
-                isNew: false
-            },
-            {
-                id: 30,
-                severity: 'medium',
-                title: '⚡ Suspicious DNS Queries',
-                details: 'Unusual DNS query patterns detected. Multiple queries to known malicious domains and DGA-generated domains.',
-                source: '10.0.3.67',
-                target: 'DNS Servers',
-                time: '24 minutes ago',
-                isNew: false
-            },
-            {
-                id: 31,
-                severity: 'medium',
-                title: '⚡ Unusual File Access Patterns',
-                details: 'Suspicious file access patterns detected. Rapid access to multiple sensitive files outside normal business hours.',
-                source: 'WORKSTATION-LEGAL-04',
-                target: 'File Server: Sensitive Documents',
-                time: '26 minutes ago',
-                isNew: false
-            },
-            {
-                id: 32,
-                severity: 'medium',
-                title: '⚡ Suspicious Email Attachment',
-                details: 'Email with suspicious attachment detected. Attachment contains executable file masquerading as document.',
-                source: 'External Email',
-                target: 'Corporate Email System',
-                time: '29 minutes ago',
-                isNew: false
-            },
-            {
-                id: 33,
-                severity: 'medium',
-                title: '⚡ Unauthorized Cloud Service Access',
-                details: 'Access to unauthorized cloud services detected. User attempting to access services not approved for corporate use.',
-                source: 'WORKSTATION-HR-11',
-                target: 'External Cloud Services',
-                time: '31 minutes ago',
-                isNew: false
-            },
-            {
-                id: 34,
-                severity: 'medium',
-                title: '⚡ Suspicious Process Execution',
-                details: 'Unusual process execution detected. Process launched from temporary directory with suspicious command-line arguments.',
-                source: 'LAPTOP-EXEC-02',
-                target: 'Windows System',
-                time: '34 minutes ago',
-                isNew: false
-            },
-            {
-                id: 35,
-                severity: 'medium',
-                title: '⚡ Network Anomaly Detected',
-                details: 'Network traffic anomaly detected. Unusual bandwidth usage and connection patterns during off-peak hours.',
-                source: 'Network Segment: 10.0.20.0/24',
-                target: 'Internet Gateway',
-                time: '36 minutes ago',
-                isNew: false
-            },
-            {
-                id: 36,
-                severity: 'medium',
-                title: '⚡ Suspicious USB Device Connection',
-                details: 'Unauthorized USB device connected to sensitive workstation. Device may contain malware or data exfiltration tools.',
-                source: 'WORKSTATION-FIN-07',
-                target: 'USB Port',
-                time: '39 minutes ago',
-                isNew: false
-            },
-            {
-                id: 37,
-                severity: 'medium',
-                title: '⚡ Unusual Authentication Attempts',
-                details: 'Multiple authentication attempts from same user account across different systems. Possible credential sharing or compromise.',
-                source: 'User: admin@company.com',
-                target: 'Multiple Systems',
-                time: '41 minutes ago',
-                isNew: false
-            },
-            {
-                id: 38,
-                severity: 'medium',
-                title: '⚡ Suspicious Cloud Storage Sync',
-                details: 'Unusual cloud storage synchronization activity detected. Large volume of files being synced to personal cloud accounts.',
-                source: 'WORKSTATION-DEV-08',
-                target: 'Personal Cloud Storage',
-                time: '43 minutes ago',
-                isNew: false
-            },
-            {
-                id: 39,
-                severity: 'medium',
-                title: '⚡ Unauthorized Remote Desktop Connection',
-                details: 'Remote desktop connection from external IP address detected. Connection not authorized for this system.',
-                source: '203.0.113.201',
-                target: 'SERVER-APP-05',
-                time: '45 minutes ago',
-                isNew: false
-            },
-            {
-                id: 40,
-                severity: 'medium',
-                title: '⚡ Suspicious Network Share Access',
-                details: 'Unusual access to network shares detected. Attempting to access restricted shares with elevated permissions.',
-                source: 'WORKSTATION-IT-14',
-                target: 'Network File Shares',
-                time: '47 minutes ago',
-                isNew: false
-            },
-            {
-                id: 41,
-                severity: 'medium',
-                title: '⚡ Unusual System Configuration Changes',
-                details: 'Unauthorized system configuration changes detected. Firewall rules and security settings being modified.',
-                source: 'SERVER-DB-01',
-                target: 'System Configuration',
-                time: '50 minutes ago',
-                isNew: false
-            },
-            {
-                id: 42,
-                severity: 'medium',
-                title: '⚡ Suspicious Email Forwarding Rule',
-                details: 'Suspicious email forwarding rule created. All emails being forwarded to external email address.',
-                source: 'User: manager@company.com',
-                target: 'Corporate Email System',
-                time: '52 minutes ago',
-                isNew: false
-            },
-            {
-                id: 43,
-                severity: 'medium',
-                title: '⚡ Unusual Application Behavior',
-                details: 'Legitimate application showing unusual behavior. Application making unexpected network connections and file modifications.',
-                source: 'WORKSTATION-SALES-05',
-                target: 'Corporate Applications',
-                time: '55 minutes ago',
-                isNew: false
-            },
-            {
-                id: 44,
-                severity: 'medium',
-                title: '⚡ Suspicious Certificate Installation',
-                details: 'Unauthorized SSL/TLS certificate installation detected. Certificate may be used for man-in-the-middle attacks.',
-                source: 'LAPTOP-IT-09',
-                target: 'Certificate Store',
-                time: '58 minutes ago',
-                isNew: false
-            },
-            {
-                id: 45,
-                severity: 'medium',
-                title: '⚡ Network Time Protocol Anomaly',
-                details: 'Suspicious NTP server communication detected. Possible time manipulation attack or NTP amplification attempt.',
-                source: '10.0.7.123',
-                target: 'NTP Servers',
-                time: '1 hour ago',
-                isNew: false
-            },
-            {
-                id: 46,
-                severity: 'medium',
-                title: '⚡ Unusual Backup Activity',
-                details: 'Suspicious backup activity detected. Large volume of data being backed up to external location during off-hours.',
-                source: 'BACKUP-SERVER-01',
-                target: 'External Storage',
-                time: '1 hour ago',
-                isNew: false
-            },
-            {
-                id: 47,
-                severity: 'medium',
-                title: '⚡ Suspicious Mobile Device Connection',
-                details: 'Unauthorized mobile device connected to corporate network. Device not registered in MDM system.',
-                source: 'Mobile Device: Unknown',
-                target: 'Corporate WiFi Network',
-                time: '1 hour ago',
                 isNew: false
             }
         ];
@@ -773,16 +457,13 @@
 
         renderAlerts();
         
-        // Simulate new alert every 30 seconds for demo
-        let alertCounter = 48;
+        // Simulate new alert every 30 seconds
+        let alertCounter = 7;
         setInterval(() => {
             const newAlerts = [
                 { title: '🔴 Advanced Persistent Threat Detected', severity: 'critical', source: '192.168.1.200', target: 'Critical Infrastructure' },
-                { title: '🔴 Zero-Day Exploit in Production', severity: 'critical', source: '185.220.101.42', target: 'Web Application' },
                 { title: '⚠️ Privilege Escalation Attempt', severity: 'high', source: 'WORKSTATION-087', target: 'Domain Admin' },
-                { title: '⚠️ Suspicious PowerShell Execution', severity: 'high', source: 'LAPTOP-SEC-03', target: 'Local System' },
-                { title: '⚡ Suspicious Network Traffic', severity: 'medium', source: '10.0.8.142', target: 'External IP' },
-                { title: '⚡ Port Scan Detected', severity: 'medium', source: '10.0.5.234', target: 'Production Network' }
+                { title: '⚡ Suspicious Network Traffic', severity: 'medium', source: '10.0.8.142', target: 'External IP' }
             ];
             
             const randomAlert = newAlerts[Math.floor(Math.random() * newAlerts.length)];
@@ -794,10 +475,8 @@
                 isNew: true
             });
             
-            // Keep only last 20 alerts visible
-            if (alerts.length > 20) alerts.pop();
+            if (alerts.length > 10) alerts.pop();
             
-            // Remove "new" badge from previous alerts
             alerts.forEach((alert, index) => {
                 if (index > 0) alert.isNew = false;
             });
